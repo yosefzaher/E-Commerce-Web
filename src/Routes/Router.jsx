@@ -12,6 +12,8 @@ import Wishlists from "../Pages/Wishlists";
 import Admin from "../Pages/Admin";
 import Dashboard from "../Components/Admin/Dashboard";
 import CategoriesAdmin from "../Components/Admin/CategoriesAdmin";
+import Authorized from "../Error/Authorized";
+import AdminRouting from "./ProtectRouting/AdminRouting";
 
 
 
@@ -135,18 +137,33 @@ const router = createBrowserRouter([
             },
 
             {
-                path: "/admin",
+                path: "/authorized",
                 element: (
                     <ProtectRouting>
                         <Suspense fallback={<LoadingScreen />}>
-                            <Admin />
+                            <Authorized />
                         </Suspense>
                     </ProtectRouting>
+                ),
+            },
+
+            {
+                path: "/admin",
+                element: (
+                    <AdminRouting>
+                        <Suspense fallback={<LoadingScreen />}>
+                            <Admin />
+                        </Suspense>
+                    </AdminRouting>
                 ),
                 children: [
                     {
                         index: true,
-                        element: <Dashboard />,
+                        element: (
+                            // <AdminRouting>
+                                <Dashboard />
+                            // </AdminRouting>
+                        ),
                     },
                     {
                         path: "categories",

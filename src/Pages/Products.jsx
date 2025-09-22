@@ -10,9 +10,9 @@ import ProductSkeleton from "../Components/Feedback/Skeleton/ProductSkeleton";
 import FormProduct from "../Components/Products/FormProduct";
 import { useMemo, useRef, useState } from "react";
 
-import SearchProduct from "../Components/Products/SearchProduct"
 import { useUser } from "../Context/UserProvider";
 import Heading from "../Components/Common/Heading";
+import SearchInput from "../Components/Common/SearchInput";
 
 const Products = () => {
     const { prefix } = useParams();
@@ -106,7 +106,12 @@ const Products = () => {
                 <Row className="p-2 ">
 
                     <div>
-                        <SearchProduct product={filteredProducts} setSearchData={setSearchData} />
+                        <SearchInput
+                            data={filteredProducts}
+                            searchKey="title"
+                            placeholder="Search by Product Name"
+                            setSearchData={setSearchData}
+                        />
                     </div>
 
                     {displayedProducts.length > 0 ? (

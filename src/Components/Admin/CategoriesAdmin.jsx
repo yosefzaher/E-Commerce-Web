@@ -8,10 +8,10 @@ import Heading from '../Common/Heading';
 import Lottie from "lottie-react";
 import NoData from "../../assets/LotiFiles/No_Data.json";
 import CategoryAdmin from './CategoryAdmin';
-import SearchCategory from '../Categories/SearchCategory';
 import FormCategory from '../Categories/FormCategory';
 import { Col, Row } from 'react-bootstrap';
 import CategorySkeletonA from '../Feedback/SkeletonAdmin/CategorySkeltonA';
+import SearchInput from '../Common/SearchInput';
 
 const CategoriesAdmin = () => {
 
@@ -104,7 +104,12 @@ const CategoriesAdmin = () => {
             <Row>
                 {/* Search */}
                 <div>
-                    <SearchCategory categories={categories} setSearchData={setSearchData} />
+                    <SearchInput
+                        data={categories}
+                        searchKey="title"
+                        placeholder="Search by Category Name"
+                        setSearchData={setSearchData}
+                    />
                 </div>
 
                 {displayedProducts.length > 0 ? (

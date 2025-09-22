@@ -5,11 +5,14 @@ import ErrorsMessage from "../Components/Common/ErrorsMessage";
 import { MdDeleteOutline } from "react-icons/md";
 import Swal from "sweetalert2";
 import { BiShoppingBag } from "react-icons/bi";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
 const Users = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+
+    const [search, setSearch] = useState("");
+
 
     const token = localStorage.getItem("token");
 
@@ -72,10 +75,9 @@ const Users = () => {
         }
     };
 
-    const [orders, setOrders] = useState([]); // 🆕 state للطلبات
-    console.log(orders);
-    const [selectedUser, setSelectedUser] = useState(null); // 🆕 المستخدم الحالي
-    const [showOrdersModal, setShowOrdersModal] = useState(false); // 🆕 فتح/غلق المودال
+    const [orders, setOrders] = useState([]);
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [showOrdersModal, setShowOrdersModal] = useState(false);
 
     const GetUserOrders = async (userId) => {
         if (!userId) return;
@@ -100,9 +102,8 @@ const Users = () => {
         }
     };
 
-    const [selectedOrder, setSelectedOrder] = useState(null); // 🆕 الطلب المختار
-    const [orderDetails, setOrderDetails] = useState([]); // 🆕 تفاصيل الطلب
-    console.log(orderDetails);
+    const [selectedOrder, setSelectedOrder] = useState(null); 
+    const [orderDetails, setOrderDetails] = useState([]); 
 
     const OrderDetails = async (orderId) => {
         setLoading(true);
@@ -112,8 +113,6 @@ const Users = () => {
                 headers: { Authorization: `Bearer ${token}` },
                 params: { orderId },
             });
-
-            
 
             setOrderDetails(res.data);
             setSelectedOrder(orderId);
@@ -139,11 +138,30 @@ const Users = () => {
         setShowOrdersModal(false)
     }
 
+
+    const filteredUsers = users.filter((user) => {
+        const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+        return (
+            user.id.toString().includes(search) ||
+            fullName.includes(search.toLowerCase())
+        );
+    });
+
     return (
         <>
             <h1 className="fw-bold">Users</h1>
+
+            <div className="mb-3 mt-4 px-sm-5 px-3">
+                <Form.Control
+                    type="text"
+                    placeholder="Search by ID or Name..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                />
+            </div>
+
             <div>
-                {users.length === 0 ? (
+                {filteredUsers.length === 0 ? (
                     <p>No users found.</p>
                 ) : (
                     <div className="table-responsive mt-5">
@@ -161,7 +179,7 @@ const Users = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {users.map((user, idx) => (
+                                {filteredUsers.map((user, idx) => (
                                     <tr key={user.id}>
                                         <td>{idx + 1}</td>
                                         <td>{user.id}</td>
@@ -174,7 +192,7 @@ const Users = () => {
                                                 <button
                                                     className=" btn btn-info fw-bold text-white"
                                                     title="Order"
-                                                    onClick={() => GetUserOrders(user.id)}
+                                                    onClick={() => GetUserOrders(user?.id)}
                                                 >
                                                     <BiShoppingBag size={22} />
                                                 </button>
@@ -197,58 +215,9 @@ const Users = () => {
                 )}
             </div>
 
-            {/* <Modal
-                show={showOrdersModal}
-                onHide={() => setShowOrdersModal(false)}
-                size="lg"
-                centered
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title>User Orders - {selectedUser}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    {loading ? (
-                        <LoadingSpinner message="Loading Orders..." size={"sm"} />
-                    ) : orders.length === 0 ? (
-                        <p className="text-center text-muted">No orders found for this user.</p>
-                    ) : (
-                        <div className="table-responsive">
-                            <table className="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Order ID</th>
-                                        <th>Status</th>
-                                        <th>items</th>
-                                        <th>Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {orders.map((order, idx) => (
-                                        <tr key={order.orderId}>
-                                            <td>{idx + 1}</td>
-                                            <td>{order.orderId}</td>
-                                            <td>{order.status || "Pending"}</td>
-                                            <td>{order.countOfItems}</td>
-                                            <td>{order.totalAmoutForeachOrder
-                                            }</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    )}
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowOrdersModal(false)}>
-                        Close
-                    </Button>
-                </Modal.Footer>
-            </Modal> */}
-
             <Modal
                 show={showOrdersModal}
-                onHide={() => setShowOrdersModal(false)}
+                onHide={onClsoe}
                 size="lg"
                 centered
             >

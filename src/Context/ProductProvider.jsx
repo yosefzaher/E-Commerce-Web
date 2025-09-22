@@ -12,6 +12,7 @@ const ProductProvider = ({ children }) => {
 
 
     const [product, setProduct] = useState([]);
+    console.log(product)
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -146,6 +147,7 @@ const ProductProvider = ({ children }) => {
             setProduct((prev) => prev.filter((p) => p.productId !== productId));
 
             await GetProducts();
+            console.log(res.data)
             return res.data;
         } catch (err) {
             setError(err.message);

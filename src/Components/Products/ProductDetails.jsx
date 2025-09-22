@@ -24,7 +24,7 @@ const ProductDetails = () => {
     const AvailableStock = specificProduct?.stockQuantity - QuantityinCart;
 
     return (
-        <div>
+        <div className="container mt-5">
             <Heading title={`Product Details`} />
 
             {specificProduct ? (
