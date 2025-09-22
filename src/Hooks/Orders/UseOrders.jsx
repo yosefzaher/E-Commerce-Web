@@ -136,10 +136,12 @@ const UseOrders = () => {
         loading,
         error,
         orderDetails,
+        setOrders,
         PlaceOrder,
         ClearOrders,
         RemoveOrder,
         OrderDetails,
+        GetUserOrders,
     };
 };
 

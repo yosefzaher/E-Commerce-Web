@@ -14,8 +14,6 @@ import "./style.css";
 const RegisterForm = () => {
     const { RegisterFunc, loading, error, user } = useUser();
 
-    console.log("Current User in RegisterForm:", user);
-
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -88,33 +86,32 @@ const RegisterForm = () => {
             return;
         }
 
-        // if (user && user.registerErrors?.length) {
-        //     user.registerErrors.forEach(msg =>
-        //         toast.error(msg || "The Email is already used.")
-        //     );
-        //     return;
-        // }
 
+        try {
 
-        const result = await RegisterFunc({
-            email: safeEmail,
-            password: safePassword,
-            firstName: safeFirstName,
-            lastName: safeLastName,
-            phoneNumber: phone,
-        });
+            const result = await RegisterFunc({
+                email: safeEmail,
+                password: safePassword,
+                firstName: safeFirstName,
+                lastName: safeLastName,
+                phoneNumber: phone,
+            });
 
-        if (result) {
-            toast.success("Account created successfully!");
-            navigate("/");
+            if (result) {
+                toast.success("Account created successfully!");
+                navigate("/");
 
-            // Reset form
-            setFirstName("");
-            setLastName("");
-            setEmail("");
-            setPassword("");
-            setConfirmPassword("");
-            setPhone("");
+                // Reset form
+                setFirstName("");
+                setLastName("");
+                setEmail("");
+                setPassword("");
+                setConfirmPassword("");
+                setPhone("");
+            }
+        } catch (err) {
+            toast.error("Registration failed:");
+            console.error("Registration failed:", err);
         }
     };
 

@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 import { useUser } from './UserProvider';
 import { toast } from 'react-toastify';
 import api from '../services/axios-global';
+import { useProduct } from './ProductProvider';
 
 
 const cartContext = createContext(null);
@@ -18,6 +19,8 @@ const CartProvider = ({ children }) => {
         items: []
     });
 
+    const { product } = useProduct();
+
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -28,8 +31,7 @@ const CartProvider = ({ children }) => {
         try {
             setLoading(true);
             const res = await api.get(`/ShoppingCarts/GetAllShoppingCart`, {
-                // headers: { Authorization: `Bearer ${token}` },
-                params: { userId: user.id }
+                params: { userId: user?.id }
             });
             let data = res.data
 
@@ -40,6 +42,7 @@ const CartProvider = ({ children }) => {
             if (!data.items) {
                 data.items = [];
             }
+
             setCart(data);
         } catch (err) {
             setError(err.response?.data || "Failed to fetch cart");
@@ -47,6 +50,7 @@ const CartProvider = ({ children }) => {
             setLoading(false);
         }
     };
+
 
     useEffect(() => {
         if (user?.id) {
@@ -107,12 +111,12 @@ const CartProvider = ({ children }) => {
     };
 
     // Remove Item from Cart
-    const removeFromCart = async (productId , quantity) => {
+    const removeFromCart = async (productId, quantity) => {
         try {
             setLoading(true);
             await api.delete(
                 `/ShoppingCarts/RemoveFromCart/${user?.id}`,
-                { params: { productId , quantity } }
+                { params: { productId, quantity } }
             );
 
             await GetCartItems();

@@ -4,10 +4,8 @@ import { Col, Row } from "react-bootstrap";
 
 import FormCategory from "../Components/Categories/FormCategory";
 import Category from "../Components/Categories/Category";
-
 import CategoriesSkeleton from "../Components/Feedback/Skeleton/CategoriesSkeleton";
 import useCategories from "../Hooks/useCategories/useCategories";
-import SearchCategory from "../Components/Categories/SearchCategory";
 
 
 import Lottie from "lottie-react";
@@ -15,6 +13,7 @@ import NoData from "../assets/LotiFiles/No_Data.json";
 import { useUser } from "../Context/UserProvider";
 import ErrorsMessage from "../Components/Common/ErrorsMessage";
 import Heading from "../Components/Common/Heading";
+import SearchInput from "../Components/Common/SearchInput";
 
 
 const Categories = () => {
@@ -82,6 +81,7 @@ const Categories = () => {
 
     return (
         <div className="container mt-4">
+
             <div className="d-flex justify-content-between align-items-center mb-5 mt-3 overflow-hidden ">
                 <Heading title="Categories" />
 
@@ -93,7 +93,8 @@ const Categories = () => {
 
             </div>
 
-            {/* {isAdmin && (
+            {
+            /* {isAdmin && (
                 <FormCategory
                     toggle={toggle}
                     setToggle={setToggle}
@@ -107,7 +108,13 @@ const Categories = () => {
             <Row>
                 {/* Search */}
                 <div>
-                    <SearchCategory categories={categories} setSearchData={setSearchData} />
+                    <SearchInput
+                        data={categories}
+                        searchKey="title"
+                        placeholder="Search by Category Name"
+                        setSearchData={setSearchData}
+                    />
+
                 </div>
 
                 {displayedProducts.length > 0 ? (

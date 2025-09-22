@@ -36,7 +36,7 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className="pt-1 d-flex align-items-center justify-content-between px-3 container-fluid sticky-top bg-white" style={{zIndex:"1020"}}>
+            <nav className="pt-1 d-flex align-items-center justify-content-between px-3 container-fluid sticky-top bg-white" style={{zIndex:"1060"}}>
                 <div className="">
                     <h2>
                         Click to
@@ -84,7 +84,7 @@ const Navbar = () => {
                     </button>
 
                     <div
-                        className="offcanvas offcanvas-end "
+                        className="offcanvas offcanvas-end rightSide"
                         tabIndex="-1"
                         id="offcanvasNavbar"
                         aria-labelledby="offcanvasNavbarLabel"

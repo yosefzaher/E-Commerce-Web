@@ -21,10 +21,10 @@ const CategorySkeletonA = () => {
                     backgroundColor="#bebdc2"
                     foregroundColor="#e3e3e3"
                 >
-                    <rect x="7" y="146" rx="2" ry="2" width="200" height="200" />
-                    <rect x="250" y="230" rx="2" ry="2" width="120" height="30" />
-                    <rect x="430" y="200" rx="2" ry="2" width="58" height="32" />
-                    <rect x="430" y="260" rx="2" ry="2" width="58" height="32" />
+                    <rect x="0" y="146" rx="2" ry="2" width="400" height="170" />
+                    {/* <rect x="400" y="230" rx="2" ry="2" width="120" height="30" /> */}
+                    <rect x="430" y="190" rx="2" ry="2" width="50" height="32" />
+                    <rect x="430" y="250" rx="2" ry="2" width="50" height="32" />
                 </ContentLoader>
             </Col>
         ));

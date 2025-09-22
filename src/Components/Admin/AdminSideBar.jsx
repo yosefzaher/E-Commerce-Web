@@ -31,7 +31,7 @@ const AdminSideBar = () => {
     }, [isOpen, isMobile]);
 
     return (
-        <div className="d-flex min-vh-100 position-relative  ">
+        <div className="d-flex min-vh-100 position-relative ">
             {/* Sidebar */}
             <nav
                 id="sidebar"
@@ -84,7 +84,7 @@ const AdminSideBar = () => {
 
             {/* Main Content */}
             <div
-                className={`flex-grow-1 main-content ${isOpen && isMobile ? "blurred" : ""}`}
+                className={`flex-grow-1 main-content ${isOpen && isMobile ? "blurred" : "" }`}
                 style={{ width: "100%", backgroundColor: "#f8f9fa", }}
             >
                 {/* Burger Button (only show on mobile) */}

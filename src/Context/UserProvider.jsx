@@ -13,15 +13,27 @@ export const useUser = () => useContext(UserContext);
 const UserProvider = ({ children }) => {
 
 
-    const [user, setUser] = useState(null)
-    console.log("user", user?.expiresIn);
+    const [user, setUser] = useState(undefined)
     const [userRole, setUserRole] = useState("")
-
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-
     const [token, setToken] = useState(localStorage.getItem("token"));
-    console.log("tokenState:", token)
+
+    const refreshTimerRef = useRef(null);
+
+    const saveSession = (data) => {
+        const now = Date.now();
+        const expiryTime = now + data.expiresIn * 1000;
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("refreshToken", data.refreshToken);
+        localStorage.setItem("user", JSON.stringify(data));
+        localStorage.setItem("expiryTime", expiryTime);
+
+        setUser(data);
+        setToken(data.token);
+        startRefreshTimer(data.expiresIn);
+    };
+
 
     const RegisterFunc = async ({ email, password, firstName, lastName, phoneNumber }) => {
         setLoading(true);
@@ -39,17 +51,30 @@ const UserProvider = ({ children }) => {
                 { headers: { "Content-Type": "application/json" } }
             )
 
+            // localStorage.setItem("token", res.data.token);
+            // localStorage.setItem("refreshToken", res.data.refreshToken);
+            // localStorage.setItem("user", JSON.stringify(res.data));
 
-            localStorage.setItem("token", res.data.token);
-            localStorage.setItem("refreshToken", res.data.refreshToken);
-            localStorage.setItem("user", JSON.stringify(res.data));
+            // setUser(res.data);
+            // setToken(res.data.token);
 
-            setUser(res.data);
-            setToken(res.data.token);
-
-            if (res.data.expiresIn) startRefreshTimer(res.data.expiresIn);
-
-            return res.data;
+            if (res.data.registerIsSucceeded) {
+                // نجاح التسجيل
+                toast.success("تم التسجيل بنجاح");
+                saveSession(res.data);
+                return res.data;
+            } else {
+                if (res.data.registerErrors?.length > 0) {
+                    res.data.registerErrors.forEach((errMsg) =>
+                        toast.error(errMsg, {
+                            draggable: true,
+                            draggablePercent: 50,
+                            draggableDirection: "x",
+                        })
+                    );
+                }
+                return null;
+            }
 
         }
         catch (err) {
@@ -80,24 +105,7 @@ const UserProvider = ({ children }) => {
         }
     }
 
-    useEffect(() => {
-        const storedUser = localStorage.getItem("user");
-        const storedToken = localStorage.getItem("token");
 
-        if (storedUser && storedToken) {
-            const parsedUser = JSON.parse(storedUser);
-            setUser(parsedUser);
-            setToken(storedToken);
-
-            if (parsedUser.expiresIn) startRefreshTimer(parsedUser.expiresIn);
-        }
-
-        // if (storedUser && storedToken) {
-        //     setUser(JSON.parse(storedUser));
-        //     setToken(storedToken);
-
-        // }
-    }, []);
 
 
     const Login = async (email, password) => {
@@ -111,18 +119,16 @@ const UserProvider = ({ children }) => {
                 { headers: { "Content-Type": "application/json" } }
             );
 
-            localStorage.setItem("token", res.data.token);
+            // localStorage.setItem("token", res.data.token);
+            // localStorage.setItem("refreshToken", res.data.refreshToken);
+            // localStorage.setItem("user", JSON.stringify(res.data));
 
-            console.log("Token", res.data.token)
-            localStorage.setItem("refreshToken", res.data.refreshToken);
-            localStorage.setItem("user", JSON.stringify(res.data));
+            // setUser(res.data)
+            // setToken(res.data.token);
 
-            setUser(res.data)
-            setToken(res.data.token);
+            // if (res.data.expiresIn) startRefreshTimer(res.data.expiresIn);
 
-            if (res.data.expiresIn) startRefreshTimer(res.data.expiresIn);
-
-
+            saveSession(res.data);
             return res.data;
         } catch (err) {
             if (err.response && err.response.data) {
@@ -144,33 +150,33 @@ const UserProvider = ({ children }) => {
         localStorage.removeItem("token");
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("user");
+        localStorage.removeItem("expiryTime"); // N
         if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current);
         setToken(null);
         setUser(null);
     };
 
-    const refreshTimerRef = useRef(null);
 
     const startRefreshTimer = (expiresInSeconds) => {
         if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current);
 
-        // جدّد قبل انتهاء التوكن بـ 60 ثانية
-        const refreshBefore = (expiresInSeconds - 60) * 1000;
+        // const refreshBefore = (expiresInSeconds - 120) * 1000;
 
-        refreshTimerRef.current = setTimeout(() => {
-            RefreshToken();
-        }, refreshBefore);
+        const refreshBefore = Math.max((expiresInSeconds - 120) * 1000, 0);
+        refreshTimerRef.current = setTimeout(RefreshToken, refreshBefore);
+
+        // refreshTimerRef.current = setTimeout(() => {
+        //     RefreshToken();
+        // }, refreshBefore);
     };
 
-    
+
     const RefreshToken = async () => {
         try {
             const refreshToken = localStorage.getItem("refreshToken");
-            console.log(refreshToken)
 
             let currentToken = localStorage.getItem("token");
 
-            console.log("Current token from storage:", currentToken);
 
             if (!refreshToken) return null;
 
@@ -184,19 +190,16 @@ const UserProvider = ({ children }) => {
                 }
             );
 
-            console.log("Refresh Token:", res.data);
 
-            // Store new tokens
-            localStorage.setItem("token", res.data.token);
-            localStorage.setItem("refreshToken", res.data.refreshToken);
+            // localStorage.setItem("token", res.data.token);
+            // localStorage.setItem("refreshToken", res.data.refreshToken);
 
-            // Update state
-            setToken(res.data.token);
-            // setUser((prev) => ({ ...prev, token: res.data.token }));
-            setUser((prev) => prev ? { ...prev, token: res.data.token } : prev);
+            // setToken(res.data.token);
+            // // setUser((prev) => ({ ...prev, token: res.data.token }));
+            // setUser((prev) => prev ? { ...prev, token: res.data.token } : prev);
 
-            if (res.data.expiresIn) startRefreshTimer(res.data.expiresIn);
-
+            // if (res.data.expiresIn) startRefreshTimer(res.data.expiresIn);
+            saveSession(res.data);
             return res.data.token;
 
         } catch (err) {
@@ -213,33 +216,46 @@ const UserProvider = ({ children }) => {
     };
 
     useEffect(() => {
+        const storedUser = localStorage.getItem("user");
+        const storedToken = localStorage.getItem("token");
+        const expiryTime = localStorage.getItem("expiryTime");
 
+        if (storedUser && storedToken && expiryTime) {
+            const parsedUser = JSON.parse(storedUser);
+            const remainingTime = Math.floor((expiryTime - Date.now()) / 1000);
+            if (remainingTime > 0) {
+                setUser(parsedUser);
+                setToken(storedToken);
+                startRefreshTimer(remainingTime);
+            } else {
+                console.error("Session expired on reload, logging out...");
+                Logout();
+            }
+        }
+    }, []);
+
+
+    useEffect(() => {
         const resInterceptor = api.interceptors.response.use(
             (response) => response,
             async (error) => {
                 const originalRequest = error.config;
-
                 if (error.response?.status === 401 && !originalRequest._retry) {
                     originalRequest._retry = true;
                     const newToken = await RefreshToken();
-
                     if (newToken) {
                         originalRequest.headers.Authorization = `Bearer ${newToken}`;
                         return api(originalRequest);
                     }
                 }
-
                 return Promise.reject(error);
             }
         );
-
-        return () => {
-            api.interceptors.response.eject(resInterceptor);
-        };
-    }, []);
+        return () => api.interceptors.response.eject(resInterceptor);
+    }, [])
 
     return (
-        <UserContext.Provider value={{ userRole, setUserRole, user, Login, Logout, token, loading, error, RegisterFunc }} >
+        <UserContext.Provider value={{ userRole, setUserRole, user, Login, Logout, token, loading, error, RegisterFunc, RefreshToken }} >
             {children}
         </UserContext.Provider>
     )
