@@ -24,7 +24,7 @@ const UseOrders = () => {
             const res = await api.get(
                 `/Orders/GetUserOrders/${userId}`
             );
-            setOrders(res.data);
+            setOrders(res.data || []);
         } catch (err) {
             setError(err.message || "Something went wrong");
         } finally {

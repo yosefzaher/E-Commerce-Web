@@ -12,7 +12,6 @@ const ProductProvider = ({ children }) => {
 
 
     const [product, setProduct] = useState([]);
-    console.log(product)
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 

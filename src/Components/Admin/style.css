@@ -1,0 +1,13 @@
+.sec:hover{
+    background-color: rgba(169, 169, 169, 0.647);
+    border-radius: 5px;
+}
+
+.sec:hover .ship {
+    transform: translateX(30px);
+}
+
+.ship {
+    transform: translateX(0px);
+    transition: transform 0.8s ease-in-out; 
+}

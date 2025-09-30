@@ -5,8 +5,10 @@ import Swal from "sweetalert2";
 import stripeLogo from "../../assets/Cat_Image/stripeLogo.png"
 import UseOrders from "../../Hooks/Orders/UseOrders";
 import { useUser } from "../../Context/UserProvider";
+import { useShipOrder } from "../../Context/ShipOrders/ShipProvider";
 
-const CheckoutForm = ({ amount, orders, Close_Pay }) => {
+
+const CheckoutForm = ({ amount, orders, Close_Pay, setOrders, GetUserShipedOrders }) => {
     const stripe = useStripe();
     const elements = useElements();
 
@@ -14,12 +16,12 @@ const CheckoutForm = ({ amount, orders, Close_Pay }) => {
     const [error, setError] = useState("");
 
     const { user } = useUser();
-    console.log("user:", user)
     const userId = user?.id;
 
-    console.log(orders)
 
-    const { ClearOrders, GetUserOrders , setOrders } = UseOrders();
+    // const { ClearOrders, GetUserOrders, setOrders } = UseOrders();
+
+    const { GetShipOrdersByUserID } = useShipOrder();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -40,7 +42,6 @@ const CheckoutForm = ({ amount, orders, Close_Pay }) => {
 
             const data = res.data;
 
-            console.log("Payment Intent Response:", data);
 
             if (!data.clientSecret) {
                 throw new Error(data.message || "Error in Payment Method Try Again");
@@ -52,7 +53,6 @@ const CheckoutForm = ({ amount, orders, Close_Pay }) => {
                 },
             });
 
-            console.log("Stripe Payment Result:", result);
 
             if (result.error) {
                 Swal.fire({
@@ -76,7 +76,13 @@ const CheckoutForm = ({ amount, orders, Close_Pay }) => {
                 const TotalPrice = amount;
                 const phoneNumber = "201055295531";
 
-                Swal.fire({
+                // setOrders([]);
+
+                GetUserShipedOrders();
+
+                Close_Pay();
+
+                const swalResult = await Swal.fire({
                     title: "Payment Done",
                     text: "Please enter your address to complete the order:",
                     input: "textarea",
@@ -91,38 +97,26 @@ const CheckoutForm = ({ amount, orders, Close_Pay }) => {
                     showCancelButton: false,
                     confirmButtonText: "Send on WhatsApp",
                     confirmButtonColor: "#25D366",
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        const address = result.value;
-                        const message = `New Stripe Paid Order
-    UserId: ${user.id}
-    Name: ${user.firstName} ${user.lastName}
-    OrderId: ${orderIds}
-    TotalPrice: ${TotalPrice} EGP
-    Address: ${address}
-    
-    This order is *already paid* via Stripe, please prepare it for shipping.`;
-
-                        const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-                            message
-                        )}`;
-                        window.open(url, "_blank");
-                    }
                 });
 
-                // Swal.fire({
-                //     title: " Payment Done ",
-                //     text: "Thank you , Your Order is Processing",
-                //     icon: "success",
-                //     confirmButtonText: "Done",
-                //     confirmButtonColor: "#3085d6",
-                // });
+                if (swalResult.isConfirmed) {
+                    const address = swalResult.value;
+                    const message = `New Stripe Paid Order
+UserId: ${user.id}
+Name: ${user.firstName} ${user.lastName}
+OrderId: ${orderIds}
+TotalPrice: ${TotalPrice} EGP
+Address: ${address}
 
-                Close_Pay();
-                // await ClearOrders(); // clear with handle Quantity
-                // await GetUserOrders(); // Update State
-                // setOrders([]);
+This order is *already paid* via Stripe, please prepare it for shipping.`;
 
+                    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+                    window.open(url, "_blank");
+                }
+
+                // await ClearOrders();
+
+                // await GetUserOrders();
             }
 
         } catch (err) {

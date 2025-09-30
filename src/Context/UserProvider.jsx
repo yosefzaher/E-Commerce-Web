@@ -59,8 +59,7 @@ const UserProvider = ({ children }) => {
             // setToken(res.data.token);
 
             if (res.data.registerIsSucceeded) {
-                // نجاح التسجيل
-                toast.success("تم التسجيل بنجاح");
+                toast.success("Registeration successfully");
                 saveSession(res.data);
                 return res.data;
             } else {
@@ -151,9 +150,11 @@ const UserProvider = ({ children }) => {
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("user");
         localStorage.removeItem("expiryTime"); // N
+        localStorage.removeItem("ShipOrdersUserId");
         if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current);
         setToken(null);
         setUser(null);
+        setError(null);
     };
 
 

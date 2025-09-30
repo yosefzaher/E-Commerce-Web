@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, Outlet } from "react-router-dom";
-import { BiCloset } from "react-icons/bi";
+import { BiCategory, BiCloset } from "react-icons/bi";
 import { CgClose } from "react-icons/cg";
+import { FaUsers } from "react-icons/fa";
+import { MdLocalShipping } from "react-icons/md";
+
+import "./style.css"
 
 const AdminSideBar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -57,11 +61,16 @@ const AdminSideBar = () => {
                     )}
 
                 </div>
-                <Link to="categories" className="d-block text-white py-2 text-decoration-none">
-                    Categories
+
+                <Link to="categories" className="d-flex gap-3 align-items-center  my-2 text-white py-2 px-2 text-decoration-none fw-semibold sec">
+                    Categories <span><BiCategory  size={25} className="mt-1" /></span>
                 </Link>
-                <Link to="users" className="d-block text-white py-2 text-decoration-none">
-                    Users
+                <Link to="users" className="d-flex gap-3 align-items-center  my-2 text-white py-2 px-2 text-decoration-none fw-semibold sec">
+                    Users <span><FaUsers size={25} className="mt-1" /></span>
+                </Link>
+
+                <Link to="ship" className="d-flex gap-3 align-items-center text-white my-2 py-2 px-2 text-decoration-none fw-semibold sec">
+                    Shiping <span><MdLocalShipping size={25} className="mt-1 ship" /></span>
                 </Link>
 
             </nav>
@@ -84,7 +93,7 @@ const AdminSideBar = () => {
 
             {/* Main Content */}
             <div
-                className={`flex-grow-1 main-content ${isOpen && isMobile ? "blurred" : "" }`}
+                className={`flex-grow-1 main-content ${isOpen && isMobile ? "blurred" : ""}`}
                 style={{ width: "100%", backgroundColor: "#f8f9fa", }}
             >
                 {/* Burger Button (only show on mobile) */}

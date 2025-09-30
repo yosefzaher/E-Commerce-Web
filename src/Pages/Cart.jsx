@@ -50,7 +50,7 @@ const Cart = () => {
 
     return (
         <div className="container mt-4">
-            <ToastContainer />
+            {/* <ToastContainer /> */}
             {
                 cart.items.map((item, idx) => (
                     <CartItem
