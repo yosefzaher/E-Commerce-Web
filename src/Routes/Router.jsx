@@ -14,6 +14,7 @@ import Dashboard from "../Components/Admin/Dashboard";
 import CategoriesAdmin from "../Components/Admin/CategoriesAdmin";
 import Authorized from "../Error/Authorized";
 import AdminRouting from "./ProtectRouting/AdminRouting";
+import Shiping from "../Pages/Shiping";
 
 
 
@@ -175,6 +176,12 @@ const router = createBrowserRouter([
                         path: "users",
                         element: (
                             <Users />
+                        ),
+                    },
+                    {
+                        path: "ship",
+                        element: (
+                            <Shiping />
                         ),
                     },
                 ],

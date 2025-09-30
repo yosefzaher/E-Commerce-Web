@@ -9,6 +9,7 @@ import ProductProvider from './Context/ProductProvider.jsx';
 import CartProvider from './Context/CartProvider.jsx';
 import UserProvider from './Context/UserProvider.jsx';
 import { WishlistProvider } from './Context/Wishlist/WishlistProvider.jsx';
+import { ShipProvider } from './Context/ShipOrders/ShipProvider.jsx';
 
 
 createRoot(document.getElementById('root')).render(
@@ -16,7 +17,9 @@ createRoot(document.getElementById('root')).render(
     <ProductProvider>
       <CartProvider>
         <WishlistProvider>
-          <Router />
+          <ShipProvider>
+            <Router />
+          </ShipProvider>
         </WishlistProvider>
       </CartProvider>
     </ProductProvider>

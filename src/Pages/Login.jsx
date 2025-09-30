@@ -57,7 +57,7 @@ const Login = () => {
 
   return (
     <div className="d-flex justify-content-center align-items-center py-5 bg-light shadow mt-5">
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <div className="w-100 p-md-5 p-3">
         <h2 className="fw-bold mt-4">Welcome Back</h2>
         <p className="text-center fw-semibold mb-4">

@@ -12,11 +12,14 @@ import { FaTshirt } from "react-icons/fa";
 import { MdOutlineWorkspacePremium } from "react-icons/md";
 import { RiCustomerService2Fill } from "react-icons/ri";
 import { useUser } from '../Context/UserProvider';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 
 
 const Home = () => {
 
-    const { RefreshToken } = useUser();
+
+
 
     return (
         <div className='home-page container '>

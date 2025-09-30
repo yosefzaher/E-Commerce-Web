@@ -6,6 +6,8 @@ import { MdDeleteOutline } from "react-icons/md";
 import Swal from "sweetalert2";
 import { BiShoppingBag } from "react-icons/bi";
 import { Button, Form, Modal } from "react-bootstrap";
+import { useShipOrder } from "../Context/ShipOrders/ShipProvider";
+import { ToastContainer } from "react-toastify";
 const Users = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -76,7 +78,9 @@ const Users = () => {
     };
 
     const [orders, setOrders] = useState([]);
+    console.log(orders)
     const [selectedUser, setSelectedUser] = useState(null);
+    console.log(selectedUser)
     const [showOrdersModal, setShowOrdersModal] = useState(false);
 
     const GetUserOrders = async (userId) => {
@@ -102,8 +106,8 @@ const Users = () => {
         }
     };
 
-    const [selectedOrder, setSelectedOrder] = useState(null); 
-    const [orderDetails, setOrderDetails] = useState([]); 
+    const [selectedOrder, setSelectedOrder] = useState(null);
+    const [orderDetails, setOrderDetails] = useState([]);
 
     const OrderDetails = async (orderId) => {
         setLoading(true);
@@ -147,8 +151,43 @@ const Users = () => {
         );
     });
 
+    const { ClearUserShippedOrders } = useShipOrder();
+
+    const handleDeleteOrder = async (userId, orderId) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "This will delete the order and you will not be able to undo it!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "Cancel",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    await ClearUserShippedOrders(userId, orderId);
+                    Swal.fire(
+                        "Deleted!",
+                        "The order has been deleted successfully.",
+                        "success"
+                    );
+                    onClsoe();
+                } catch (error) {
+                    Swal.fire(
+                        "Error",
+                        "An error occurred while deleting. Please try again.",
+                        "error"
+                    );
+                }
+            }
+        });
+    };
+
+
     return (
         <>
+            {/* <ToastContainer /> */}
             <h1 className="fw-bold">Users</h1>
 
             <div className="mb-3 mt-4 px-sm-5 px-3">
@@ -162,7 +201,7 @@ const Users = () => {
 
             <div>
                 {filteredUsers.length === 0 ? (
-                    <p>No users found.</p>
+                    <p className="fs-2 fw-semibold text-center mt-5">No users found</p>
                 ) : (
                     <div className="table-responsive mt-5">
                         <table className="table table-striped table-hover align-middle">
@@ -201,7 +240,7 @@ const Users = () => {
                                         <td>
                                             <button
                                                 className=" btn btn-danger fw-bold"
-                                                title="Delete"
+                                                title="Delete User"
                                                 onClick={() => DeleteUser(user.id)}
                                             >
                                                 <MdDeleteOutline size={22} className="" />
@@ -283,6 +322,7 @@ const Users = () => {
                                         <th>Items</th>
                                         <th>Total</th>
                                         <th>Details</th>
+                                        <th>Delete</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -290,7 +330,15 @@ const Users = () => {
                                         <tr key={order.orderId}>
                                             <td>{idx + 1}</td>
                                             <td>{order.orderId}</td>
-                                            <td>{order.status || "Pending"}</td>
+                                            <td>
+                                                {order.orderStatus === "Shipped" ? (
+                                                    <span className=" bg-success p-1 fw-semibold text-white rounded">Shipped</span>
+                                                ) : order.orderStatus === "Pending" ? (
+                                                    <span className=" bg-warning text-dark p-1 fw-semibold rounded">Pending</span>
+                                                ) : (
+                                                    <span className=" bg-secondary p-2">{order.orderStatus}</span>
+                                                )}
+                                            </td>
                                             <td>{order.countOfItems}</td>
                                             <td>{order.totalAmoutForeachOrder}</td>
                                             <td>
@@ -300,6 +348,17 @@ const Users = () => {
                                                     onClick={() => OrderDetails(order.orderId)}
                                                 >
                                                     View
+                                                </Button>
+                                            </td>
+
+                                            <td>
+                                                <Button
+                                                    variant="danger"
+                                                    size="sm"
+                                                    onClick={() => { handleDeleteOrder(selectedUser, order.orderId) }}
+                                                    disabled={order.orderStatus !== "Shipped"}
+                                                >
+                                                    Delete
                                                 </Button>
                                             </td>
                                         </tr>
