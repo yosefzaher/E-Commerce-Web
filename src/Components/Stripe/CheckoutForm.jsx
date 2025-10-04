@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import stripeLogo from "../../assets/Cat_Image/stripeLogo.png"
 import UseOrders from "../../Hooks/Orders/UseOrders";
 import { useUser } from "../../Context/UserProvider";
-import { useShipOrder } from "../../Context/ShipOrders/ShipProvider";
+// import { useShipOrder } from "../../Context/ShipOrders/ShipProvider";
 
 
 const CheckoutForm = ({ amount, orders, Close_Pay, setOrders, GetUserShipedOrders }) => {
@@ -21,7 +21,7 @@ const CheckoutForm = ({ amount, orders, Close_Pay, setOrders, GetUserShipedOrder
 
     // const { ClearOrders, GetUserOrders, setOrders } = UseOrders();
 
-    const { GetShipOrdersByUserID } = useShipOrder();
+    // const { GetShipOrdersByUserID } = useShipOrder();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -31,10 +31,18 @@ const CheckoutForm = ({ amount, orders, Close_Pay, setOrders, GetUserShipedOrder
         setLoading(true);
         setError("");
 
+        const orderIds = orders.map(o => o.orderId).join(", ");
+
         try {
 
             const res = await api.post("/Payments/create-payment-intent",
-                { amount: amount, currency: "egp" },
+                {
+                    userId,
+                    orderId: 0, // orderIds
+                    // Array to can take more than order
+                    amount: amount,
+                    currency: "egp"
+                },
                 {
                     headers: { "Content-Type": "application/json" },
                 }
@@ -72,7 +80,7 @@ const CheckoutForm = ({ amount, orders, Close_Pay, setOrders, GetUserShipedOrder
                     console.log(`Order ${order.orderId} marked as shipped`, markShippedRes.data);
                 }
 
-                const orderIds = orders.map(o => o.orderId).join(", ");
+                // const orderIds = orders.map(o => o.orderId).join(", ");
                 const TotalPrice = amount;
                 const phoneNumber = "201055295531";
 
