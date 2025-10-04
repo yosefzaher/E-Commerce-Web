@@ -1,12 +1,35 @@
-# React + Vite
+# 🛒 Click 2 Bye - E-commerce
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Click 2 Bye is an **E-commerce web application** built with **React**.  
+It allows users to browse products, add them to the cart, and proceed with secure checkout using **Stripe**.
 
-Currently, two official plugins are available:
+----
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
+- 🛍️ Browse products with detailed information.
+- ➕ Add/Remove products from the shopping cart.
+- 💳 Online payment integration with **Stripe**.
+- 🎨 Modern UI built with **Bootstrap** and **React-Bootstrap**.
+- 🎭 Smooth animations with **Lottie React**.
+- 🔔 Interactive notifications with **SweetAlert2** & **React-Toastify**.
+- ⚡ State management using **Context API**.
+- 🌐 API consumption via **Axios**.
 
-## Expanding the ESLint configuration
+----
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🛠️ Tech Stack
+- **React.js**
+- **Axios**
+- **Context API**
+- **Bootstrap / React-Bootstrap**
+- **React Icons**
+- **Lottie React**
+- **SweetAlert2**
+- **React Toastify**
+- **Stripe / @stripe/stripe-js**
+    
+----
+
+## 🌐 Deploy 
+-- **https://e-commerce-iti-six.vercel.app/**
+
