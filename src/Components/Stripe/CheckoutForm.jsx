@@ -31,15 +31,16 @@ const CheckoutForm = ({ amount, orders, Close_Pay, setOrders, GetUserShipedOrder
         setLoading(true);
         setError("");
 
-        const orderIds = orders.map(o => o.orderId).join(", ");
+        // const orderIds = orders.map(o => o.orderId).join(", ");
+        const orderIds = orders.map(o => o.orderId);
+
 
         try {
 
             const res = await api.post("/Payments/create-payment-intent",
                 {
                     userId,
-                    orderId: 0, // orderIds
-                    // Array to can take more than order
+                    orderIds: orderIds, 
                     amount: amount,
                     currency: "egp"
                 },
