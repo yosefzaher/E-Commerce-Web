@@ -50,7 +50,9 @@ const UseOrders = () => {
                 }
             );
             if (res.status === 204 || res.status === 200) {
-                await GetProducts();
+                setTimeout(() => {
+                    GetProducts();
+                }, 400);
                 return true;
             }
             return false;
