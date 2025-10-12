@@ -17,8 +17,14 @@ const Cart = () => {
     const { PlaceOrder } = UseOrders()
     const [orderSuccess, setOrderSuccess] = useState(false);
 
+    const [placing, setPlacing] = useState(false);
+
+
     const handelPlaceOrder = async () => {
+        setPlacing(true);
         const success = await PlaceOrder();
+        setPlacing(false);
+
         if (success) {
             setOrderSuccess(true);
             clearCart_LogOut();
@@ -30,7 +36,7 @@ const Cart = () => {
     if (orderSuccess) {
         return (
             <div className="text-center mt-5 m-auto w-100" style={{ maxWidth: "600px" }}>
-                <Lottie animationData={Success} loop={false} autoplay={true} />
+                <Lottie animationData={Success} loop={true} autoplay={true} />
                 <h3 className="mt-3 fw-semibold text-success">Order placed successfully </h3>
             </div>
         );
@@ -41,7 +47,7 @@ const Cart = () => {
         return (
             <>
                 <div className='m-auto w-100' style={{ maxWidth: "600px" }} >
-                    <Lottie animationData={EmptyCard} loop={true} autoplay={true} />
+                    <Lottie animationData={EmptyCard} loop={true} autoplay={true}  />
                 </div>
                 <h3 className="text-center mt-3 fw-semibold">Your cart is empty ):</h3>
             </>
@@ -66,7 +72,22 @@ const Cart = () => {
 
             <div className='d-flex justify-content-between align-items-center mt-5'>
                 <h5>Total Price: {(getTotalPrice()).toFixed(2)} EGP</h5>
-                <button className='btn btn-primary' onClick={handelPlaceOrder}>Place Order</button>
+
+                <button
+                    className='btn btn-primary d-flex align-items-center gap-2'
+                    onClick={handelPlaceOrder}
+                    disabled={placing}
+                >
+                    {placing ? (
+                        <>
+                            Placing... <Spinner animation="border" size="sm" /> 
+                        </>
+                    ) : (
+                        "Place Order"
+                    )}
+                </button>
+
+                {/* <button className='btn btn-primary' onClick={handelPlaceOrder}>Place Order</button> */}
             </div>
         </div>
     )
