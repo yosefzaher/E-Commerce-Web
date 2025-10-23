@@ -29,7 +29,7 @@ const CategoryAdmin = ({ title, img, prefix, onEdit, onDelete, id }) => {
     return (
         <div className="category position-relative  p-1  overflow-hidden w-100 overflow-x-hidden shadow">
             <Link to={`/categories/products/${prefix}`} className='text-decoration-none'>
-                <div className='d-flex flex-column flex-md-row justify-content-between align-items-center shadow rounded-3  '>
+                <div className='d-flex flex-column flex-md-row justify-content-between align-items-center shadow rounded-3 pe-md-5 py-md-1 py-2'>
 
                     {/* Image */}
                     <div className="">
@@ -55,38 +55,36 @@ const CategoryAdmin = ({ title, img, prefix, onEdit, onDelete, id }) => {
 
                     </div>
 
-                    <div className='d-flex flex-md-row flex-column  justify-content-between align-items-center gap-3 w-100 px-lg-3 px-sm-2 px-2 '>
-
-                        <h4 className="text-black">{title}</h4>
-
-
-                        <div
-                            className="d-flex flex-md-column justify-content-between gap-3 p-2 "
-                            style={{ right: "30px", top: "5px", zIndex: 999 }}
-                        >
-                            <button
-                                className=" btn btn-outline-info fw-bold w-100 text-start "
-                                onClick={() => {
-                                    onEdit();
-                                    setMenuOpen(false);
-                                }}
-                                title='Edit'
-                            >
-                                <FaRegEdit />
-                            </button>
-                            <button
-                                className=" btn btn-outline-danger fw-bold w-100 text-start "
-                                onClick={handleDelete}
-                                title='Delete'
-                            >
-                                <MdDeleteOutline />
-                            </button>
-                        </div>
-
+                    <div className='d-flex flex-md-row flex-column text-center gap-3 px-lg-3  px-2 '>
+                        <h4 className="text-black fw-semibold">{title}</h4>
                     </div>
 
                 </div>
             </Link>
+
+            <div
+                className="d-flex flex-sm-row flex-column  justify-content-between gap-3 p-2"
+                style={{ right: "30px", top: "5px", zIndex: 1350 }}
+            >
+                <button
+                    className="btn btn-outline-info fw-bold w-100 text-start "
+                    onClick={() => {
+                        onEdit();
+                        setMenuOpen(false);
+                    }}
+                    title='Edit'
+                >
+                    <span className='d-flex align-items-center justify-content-center gap-2'> <span>Edit</span> <FaRegEdit size={18}/></span>
+                </button>
+                <button
+                    className="btn btn-outline-danger fw-bold w-100 text-start "
+                    onClick={handleDelete}
+                    title='Delete'
+                >
+                    <span className='d-flex align-items-center justify-content-center gap-2'> <span>Delete</span> <MdDeleteOutline size={22} /></span>
+                </button>
+            </div>
+
             {/* </Link> */}
         </div>
     );
