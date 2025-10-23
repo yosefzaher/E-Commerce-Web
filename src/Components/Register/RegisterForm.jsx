@@ -98,7 +98,7 @@ const RegisterForm = () => {
             });
 
             if (result) {
-                toast.success("Account created successfully!");
+                // toast.success("Account created successfully!");
                 navigate("/");
 
                 // Reset form
