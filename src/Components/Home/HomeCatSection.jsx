@@ -24,7 +24,7 @@ const HomeCatSection = () => {
               <div className="category-overlay position-absolute top-0 start-0 w-100 h-100 d-flex flex-column gap-4 justify-content-center align-items-center">
                 <h1 className="text-white">Explore Mens Products</h1>
                 <Link
-                  to={`/categories/products/men`}
+                  to={`/categories/products/MP`}
                   className="btn btn-info text-white fw-semibold rounded rounded-2 py-2 px-4"
                 >
                   Explore
@@ -45,7 +45,7 @@ const HomeCatSection = () => {
               <div className="category-overlay position-absolute top-0 start-0 w-100 h-100 d-flex flex-column gap-4 justify-content-center align-items-center">
                 <h1 className="text-white">Explore Womens Products</h1>
                 <Link
-                  to={`/categories/products/women`}
+                  to={`/categories/products/WP`}
                   className="btn btn-info text-white fw-semibold rounded rounded-2 py-2 px-4"
                 >
                   Explore
@@ -66,7 +66,7 @@ const HomeCatSection = () => {
               <div className="category-overlay position-absolute top-0 start-0 w-100 h-100 d-flex flex-column gap-4 justify-content-center align-items-center">
                 <h1 className="text-white">Explore Accessories Products</h1>
                 <Link
-                  to={`/categories/products/bags`}
+                  to={`/categories`}
                   className="btn btn-info text-white fw-semibold rounded rounded-2 py-2 px-4"
                 >
                   Explore

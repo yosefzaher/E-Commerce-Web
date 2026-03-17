@@ -12,7 +12,7 @@ import { FaStripeS, FaWhatsapp } from "react-icons/fa";
 import { useUser } from "../Context/UserProvider";
 import { TbCashRegister } from "react-icons/tb";
 import { useShipOrder } from "../Context/ShipOrders/ShipProvider";
-import axios from "axios";
+import api from "../services/axios-global";
 
 
 const Orders = () => {
@@ -128,9 +128,8 @@ const Orders = () => {
         if (!user?.id || !token) return;
 
         try {
-            const res = await axios.get(
-                `https://click2buy.runasp.net/api/Orders/GetUserShippedOrders/${user.id}`,
-                { headers: { Authorization: `Bearer ${token}` } }
+            const res = await api.get(
+                `/Orders/GetUserShippedOrders/${user.id}`
             );
             setShiped(res.data);
             console.log("ShipedOrder:", res.data);

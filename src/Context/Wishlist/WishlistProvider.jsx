@@ -1,6 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { useUser } from "../UserProvider";
-import axios from "axios";
 import api from "../../services/axios-global";
 
 

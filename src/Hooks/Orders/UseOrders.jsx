@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useUser } from "../../Context/UserProvider";
 import { useProduct } from "../../Context/ProductProvider";

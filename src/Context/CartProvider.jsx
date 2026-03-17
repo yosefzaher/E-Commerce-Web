@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { useUser } from './UserProvider';
 import { toast } from 'react-toastify';

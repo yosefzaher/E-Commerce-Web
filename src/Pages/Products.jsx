@@ -13,11 +13,13 @@ import { useMemo, useRef, useState } from "react";
 import { useUser } from "../Context/UserProvider";
 import Heading from "../Components/Common/Heading";
 import SearchInput from "../Components/Common/SearchInput";
+import useCategories from "../Hooks/useCategories/useCategories";
 
 const Products = () => {
     const { prefix } = useParams();
 
     const { product, loading, error, RemoveProduct, AddProduct, UpdateProduct } = useProduct();
+    const { categories } = useCategories();
 
 
     const [toggle, setToggle] = useState(false);
@@ -41,12 +43,26 @@ const Products = () => {
         });
     };
 
-    // Filter Products by CategoryName and Prefix  ==> to edintify each product in the correct Category
-    const filteredProducts = useMemo(() => {
-        return (product).filter((item) =>
-            item?.categoryName?.toLowerCase() === prefix?.toLowerCase()
+    // Resolve the URL prefix to the actual category — match by Code OR Title (case-insensitive)
+    const matchedCategory = useMemo(() => {
+        if (!prefix || categories.length === 0) return null;
+        const lowerPrefix = prefix.toLowerCase();
+        return (
+            categories.find((cat) => cat.prefix?.toLowerCase() === lowerPrefix) ||
+            categories.find((cat) => cat.title?.toLowerCase() === lowerPrefix)
         );
-    }, [product, prefix]);
+    }, [prefix, categories]);
+
+    const filteredProducts = useMemo(() => {
+        if (!matchedCategory) return [];
+        const categoryTitle = matchedCategory.title?.toLowerCase();
+        return product.filter(
+            (item) => item?.categoryName?.toLowerCase() === categoryTitle
+        );
+    }, [product, matchedCategory]);
+
+    // Show the resolved category name in the heading, or the raw URL prefix as fallback
+    const displayName = matchedCategory?.title || prefix;
 
 
     const displayedProducts = searchData !== null ? searchData : filteredProducts;
@@ -59,7 +75,7 @@ const Products = () => {
         return <>
             <div className="d-flex justify-content-between align-items-center mb-2">
 
-                <Heading title={`Products ${prefix}`} />
+                <Heading title={`Products ${displayName}`} />
 
                 {isAdmin && (
                     <button
@@ -78,7 +94,7 @@ const Products = () => {
     return (
         <div className="container mt-4 ">
             <div className="d-flex justify-content-between align-items-center mb-4 overflow-hidden">
-                <Heading title={`Products ${prefix}`} />
+                <Heading title={`Products ${displayName}`} />
 
                 {/* to can Add Product */}
                 {isAdmin && (

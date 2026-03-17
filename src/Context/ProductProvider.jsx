@@ -1,4 +1,3 @@
-import axios, { AxiosError } from "axios";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { useUser } from "./UserProvider";
@@ -17,14 +16,16 @@ const ProductProvider = ({ children }) => {
 
 
     const GetProducts = async () => {
+        console.log("🚀 Attempting to fetch products...");
+        console.log("🔗 URL:", import.meta.env.VITE_API_URL);
         try {
             setLoading(true);
-            const res = await api.get(
-                `/Products/GetAllProucts`
-            );
+            const res = await api.get(`/Products/GetAllProucts`);
+            console.log("✅ Data received:", res.data);
             const data = res.data;
             setProduct(data);
         } catch (err) {
+            console.error("❌ Fetch error:", err);
             setError(err.message);
         } finally {
             setLoading(false);
