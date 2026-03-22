@@ -1,0 +1,29 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 20
+    commands:
+      - echo "[Buildspec INFO] Installing Dependencies..."
+      - npm ci
+  build:
+    commands:
+      - echo "[Buildspec INFO] Building Project..."
+      - echo "VITE_API_URL=/api" > .env
+      - npm run build
+  post_build:
+    commands:
+      - echo "[Buildspec INFO] Copying deployment files..."
+      - cp appspec.yml dist/
+      - cp -r scripts/ dist/     
+      - echo "[Buildspec INFO] Build Completed on $(date)"
+artifacts:
+  base-directory: dist
+  files:
+    - '**/*'
+  discard-paths: no
+
+cache:
+  paths:
+    - 'node_modules/**/*' 
